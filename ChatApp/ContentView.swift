@@ -64,6 +64,7 @@ struct ChatView: View {
                 if self.isTransitionsLoading {
                     VStack {
                         Spacer()
+                        // loading animation
                         ChatLoading(bgColor: Color.clear)
                             .frame(maxWidth: .infinity, alignment: .center) // 使文字在畫面置中
                         Spacer()
@@ -939,5 +940,3 @@ struct ContentView: View {
         }
     }
 }
-
-// testing
