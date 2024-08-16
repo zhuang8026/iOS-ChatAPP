@@ -14,7 +14,7 @@ struct ChatView: View {
     @State private var WARNING_INFO: [Message] = [] // 異常用電 訊息
 
     @State private var messageText: String = "" // 用戶輸入框控制
-    @State private var userID: String = "Asd@iii.org.tw" // 用戶輸入框控制
+    @State private var userID: String = "u0955318835@gmail.com" // 用戶輸入框控制
     @State private var inquiryID: String = "" // token唯一碼
     @FocusState private var isInputFieldFocused: Bool // 鍵盤顯示控制
     @State private var isLoading: Bool = false // [聊天過程] 判斷是否顯示加載動畫
@@ -666,6 +666,13 @@ struct ChatView: View {
             if let dataArray = data as? [[String: Any]] {
                 // 處理每個字典
                 for dictionary in dataArray {
+                    if let status = dictionary["status"] as? String {
+                        if status == "ok" {
+                            print("[取得歷史資料] status: success")
+                        } else {
+                            print("[取得歷史資料] status: failed")
+                        }
+                    }
                     // 提取 GLOBAL_MESSAGES 陣列
                     if let messagesList = dictionary["messages"] as? [[String: Any]] {
                         // 處理每個消息對象
@@ -815,17 +822,13 @@ struct ChatView: View {
                         self.isWarningAbnormal = false // 隱藏 異常推播 按鈕
                         self.postSendUserID() // 默認: 用電查詢 token
                     }
-                } else if status == "fail" {
+                } else {
                     // 異常偵測 API Fail，可取正常token
                     if let error = firstData["err"] as? String {
                         print("[異常偵測] 失敗: \(error)")
                     } else {
                         print("[異常偵測] 失敗: 未知錯誤")
                     }
-                    self.postSendUserID() // 默認: 用電查詢 token
-                } else {
-                    // 異常偵測 API 未知狀態，可取正常token
-                    print("[異常偵測] 未知的狀態")
                     self.postSendUserID() // 默認: 用電查詢 token
                 }
 
@@ -836,7 +839,7 @@ struct ChatView: View {
         
         // [異常偵測] 異常即時廣播 語言模型 回覆
         socket.on("/broadcast_response") { data, ack in
-            print("listening -> '/broadcast_response'")
+            print("listening -> '/broadcast_response'：\(data)")
 
             guard let firstData = data.first else {
                 print("沒有收到數據")
@@ -922,7 +925,7 @@ struct ChatView: View {
 }
 
 struct ContentView: View {
-    @State private var isChatViewPresented = false
+    @State private var isChatViewPresented = false // 子頁面控制器（默認：關閉）
     
     var body: some View {
         VStack {
