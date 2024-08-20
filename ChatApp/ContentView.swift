@@ -692,13 +692,13 @@ struct ChatView: View {
                                 // 判斷當前為那種類型機器人
                                 switch self.ActiveBtnName {
                                     case "SEARCH":
-//                                        print("[SEARCH] 用電查詢 歷史訊息 ")
+//                                        print("[SEARCH] >>用電查詢<< 歷史訊息 ")
                                         self.SEARCH_INFO.append(newMessage)
                                     case "FAQ":
-//                                        print("[FAQ] FAQ 歷史訊息 ")
+//                                        print("[FAQ] >>FAQ<< 歷史訊息 ")
                                         self.FAQ_INFO.append(newMessage)
                                     case "WARNING":
-//                                        print("[WARNING] 異常用電 歷史訊息")
+//                                        print("[WARNING] >>異常用電<< 歷史訊息")
                                         self.WARNING_INFO.append(newMessage)
                                     default:
                                     print("WARNING, no use anything key: \(self.ActiveBtnName)")
@@ -767,9 +767,10 @@ struct ChatView: View {
                    let reportTime = jsonObject["report_time"] as? String {
                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                         print("-- [FAQ] 取得 語言模型 回覆 --")
-                        print("aiMessage: \(useID)")
-                        print("aiMessage: \(inquiryID), \(self.inquiryID)")
-                        print("aiMessage: \(aiMessage)")
+                        print("[FAQ] useID: \(useID)")
+                        print("[FAQ] inquiryID-msg: \(inquiryID)")
+                        print("[FAQ] inquiryID-now: \(self.inquiryID)")
+                        print("[FAQ] aiMessage: \(aiMessage)")
                         if inquiryID == self.inquiryID {
                             // 創建一個新的訊息
                             let formattedTime = convertDateToTimeString(dateString: reportTime)
