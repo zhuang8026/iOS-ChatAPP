@@ -293,6 +293,7 @@
 			mainGroup = ABAF7D412C4F9CF70009F6AC;
 			packageReferences = (
 				ABDB7B7B2C5CC8EB00FA5B96 /* XCRemoteSwiftPackageReference "SVGKit" */,
+				AB51D6322C76DA3F0017AEE0 /* XCRemoteSwiftPackageReference "socket" */,
 			);
 			productRefGroup = ABAF7D4B2C4F9CF70009F6AC /* Products */;
 			projectDirPath = "";
@@ -789,6 +790,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		AB51D6322C76DA3F0017AEE0 /* XCRemoteSwiftPackageReference "socket" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/socketio/socket.io-client-swift";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 		ABDB7B7B2C5CC8EB00FA5B96 /* XCRemoteSwiftPackageReference "SVGKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SVGKit/SVGKit.git";

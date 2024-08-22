@@ -443,22 +443,25 @@ struct ChatView: View {
 //    }
 
     // 獲取當前時間的函數 yyyy-MM-dd HH:mm:ss
-    private func getCurrentFullTime() -> String {
+    private func getCurrentFullTime(timeZone: TimeZone? = TimeZone(identifier: "Asia/Taipei")) -> String {
         let dateFormatter = DateFormatter()
+        dateFormatter.timeZone = timeZone // 設定用戶自定義的時區
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss" // 設定日期格式
         return dateFormatter.string(from: Date())
     }
-    
+
     // 獲取當前時間的函數 yyyy-MM-dd
-    private func getCurrentDate() -> String {
+    private func getCurrentDate(timeZone: TimeZone? = TimeZone(identifier: "Asia/Taipei")) -> String {
         let dateFormatter = DateFormatter()
+        dateFormatter.timeZone = timeZone // 設定用戶自定義的時區
         dateFormatter.dateFormat = "yyyy-MM-dd" // 設定日期格式
         return dateFormatter.string(from: Date())
     }
 
     // 獲取當前時間的函數 HH:mm
-    private func getCurrentTime() -> String {
+    private func getCurrentTime(timeZone: TimeZone? = TimeZone(identifier: "Asia/Taipei")) -> String {
         let dateFormatter = DateFormatter()
+        dateFormatter.timeZone = timeZone // 設定用戶自定義的時區
         dateFormatter.dateFormat = "HH:mm" // 設定日期格式
         return dateFormatter.string(from: Date())
     }
