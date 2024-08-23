@@ -16,6 +16,13 @@ struct Message: Identifiable {
     var status: Bool = false
 }
 
+struct FAQList: Identifiable {
+    var id = UUID() // Unique identifier
+    var prompt: String // content
+    var name: String // queName
+    var value: String // serialNumber
+}
+
 extension Color {
     static let PrimaryColor = Color(red: 50.0 / 255.0, green: 53.0 / 255.0, blue: 98.0 / 255.0) // 深藍色 全域文字顏色
     static let ChatColor = Color(red: 40/255, green: 180/255, blue: 179/255)  // 綠松石色 聊天視窗

@@ -11,6 +11,7 @@ struct ChatView: View {
     
     @State private var SEARCH_INFO: [Message] = [] // 用電查詢 內容
     @State private var FAQ_INFO: [Message] = [] // FAQ 訊息
+    @State private var FAQ_List: [FAQList] = [] // FAQ 訊息
     @State private var WARNING_INFO: [Message] = [] // 異常用電 訊息
 
     @State private var messageText: String = "" // 用戶輸入框控制
@@ -157,15 +158,15 @@ struct ChatView: View {
 
                 // Buttons & send message
                 VStack(spacing: 0) {  // pacing: 0 -> 确保间距为 0
-                    let buttonTitles = [
-                        ButtonData(name: "帳密相關", value: "members_setting", prompt:"我想詢問帳密相關問題"),
-                        ButtonData(name: "系統服務", value: "device_setting", prompt: "我想詢問系統服務相關的問題"),
-                        ButtonData(name: "設備相關", value: "monthly_report", prompt: "我想詢問智慧設備相關問題")
-                    ]
+//                    let buttonTitles = [
+//                        ButtonData(name: "帳密相關", value: "members_setting", prompt:"我想詢問帳密相關問題"),
+//                        ButtonData(name: "系統服務", value: "device_setting", prompt: "我想詢問系統服務相關的問題"),
+//                        ButtonData(name: "設備相關", value: "monthly_report", prompt: "我想詢問智慧設備相關問題")
+//                    ]
                     // FAQ 快速查詢
                     if  self.ActiveBtnName == "FAQ" {
                         HStack {
-                            ForEach(buttonTitles, id: \.value) { buttonData in
+                            ForEach(self.FAQ_List, id: \.value) { buttonData in
                                 Button(action: {
                                     // 根据 value 调用相应的函数
                                     handleAction(for: buttonData.value, prompt: buttonData.prompt)
@@ -189,6 +190,7 @@ struct ChatView: View {
                         .padding(.bottom, 5)  // 设置上下边距为 5 点
                         .padding(.horizontal, 10)  // 设置左右边距为 10 点
                     }
+
                     // Buttons
                     HStack {
                         // 用電查詢 按鈕
@@ -219,6 +221,7 @@ struct ChatView: View {
                             self.isTransitionsLoading = true // [開始] 加載聊天室內容
                             self.ActiveBtnName = "FAQ" // 切換 FAQ
                             self.postFAQSendUserID() // [第一步] 用電查詢 -> 進入聊天視窗取得用戶token
+                            self.getFAQList() // 取得FAQ問題項目
                         }) {
                             Text("FAQ")
                                 .frame(maxWidth: .infinity)
@@ -391,6 +394,11 @@ struct ChatView: View {
     }
     
     // -----------> [FAQ] <-----------
+    // [FAQ] 開始取得FAQ問題項目
+    private func getFAQList() {
+        socket.emit("/faq/que")
+        print("[FAQ] 開始取得FAQ問題項目")
+    }
     // [FAQ] 取得用戶token
     private func postFAQSendUserID() {
         let data: [String: Any] = ["user_id": userID]
@@ -726,6 +734,42 @@ struct ChatView: View {
         }
         
         // --------- [FAQ] ---------
+        // [FAQ][FAQ list]
+        socket.on("/faq_que_response") { data, ack in
+            print("listening -> '/faq_que_response'")
+            print("[FAQ][取得 FAQ list] \(data)")
+            self.FAQ_List = []
+//            guard let firstData = data.first else {
+//                print("[FAQ] 沒有收到數據")
+//                return
+//            }
+             
+            // 將 data 轉換為陣列
+            if let dataArray = data as? [[String: Any]] {
+                // 處理每個字典
+                for dictionary in dataArray {
+                    if let status = dictionary["status"] as? String,
+                       let faqArray = dictionary["data"] as? [[String: Any]] {
+                        if status == "ok" {
+                            for faq in faqArray {
+                                if let message = faq["message"] as? String,
+                                   let que_name = faq["que_name"] as? String,
+                                   let serial_number = faq["serial_number"] as? String {
+                                    let newList = FAQList(prompt: "\(message)", name: "\(que_name)", value: serial_number)
+                                    self.FAQ_List.append(newList)
+                                }
+                          }
+                            print("[FAQ list] success：\(self.FAQ_List)")
+                        } else {
+                            print("[FAQ list] failed")
+                        }
+                    }
+                }
+            } else {
+                print("資料格式不正確")
+            }
+        }
+
         // [FAQ] 取得 User information（get token）
         socket.on("/faq/status_response") { data, ack in
             print("listening -> '/faq/status_response'")
