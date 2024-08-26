@@ -816,7 +816,7 @@ struct ChatView: View {
                         print("-- [FAQ] 取得 語言模型 回覆 --")
                         print("[FAQ] useID: \(useID)")
                         print("[FAQ] inquiryID-msg: \(inquiryID)")
-                        print("[FAQ] inquiryID-now: \(self.inquiryID)")
+                        print("[FAQ] inquiryID-current: \(self.inquiryID)")
                         print("[FAQ] aiMessage: \(aiMessage)")
                         if inquiryID == self.inquiryID {
                             // 創建一個新的訊息
