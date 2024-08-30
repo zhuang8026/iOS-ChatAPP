@@ -68,14 +68,16 @@ struct ContentViewDemo3: View {
                             }
                         }
                        // [事件觸發] 滾動到最後一個訊息
-                       .onChange(of: self.messages.count) { count, _ in
+//                       .onChange(of: self.messages.count) { count, _ in // iOS 17.4
+                       .onChange(of: self.messages.count) { count in // iOS 16.0
                             withAnimation {
                                 if let lastMessage = self.messages.last {
                                     proxy.scrollTo(lastMessage.id, anchor: .bottom)
                                 }
                             }
                         }
-                       .onChange(of: isLoading) { isLoading, _ in
+//                       .onChange(of: isLoading) { isLoading, _ in // iOS 17.4
+                       .onChange(of: isLoading) { isLoading in // iOS 16.0
                            // 当 isLoading 改变时，确保视图滚动到底部
                            print("isLoading: \(isLoading)")
                            withAnimation {

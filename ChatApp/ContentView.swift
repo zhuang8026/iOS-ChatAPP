@@ -110,6 +110,10 @@ struct ChatView: View {
                                     if self.isSearchLoading {
                                         ChatLoading().id("search_loading") // 为 ChatLoading 设置一个 ID
                                     }
+                                    Rectangle() // [ios16.0 解決辦法] 無法靠動態ID達到指定位置
+                                       .frame(width: 1, height: 1)
+                                       .background(Color.clear)
+                                       .id("chat_bottom")
                                 }
                                 // [進入畫面觸發] 當視圖顯示時立即滾動到最後一個訊息
                                 .onAppear {
@@ -125,20 +129,24 @@ struct ChatView: View {
                                     networkMonitor.stopMonitoring()
                                 }
                                 // [事件觸發] 滾動到最後一個訊息
-                                .onChange(of: messageList.count) { count, _ in
+//                                .onChange(of: messageList.count) { count, _ in // iOS 17.4
+                                .onChange(of: messageList.count) { count in // iOS 16.0
                                     withAnimation {
                                         if let lastMessage = messageList.last {
                                             proxy.scrollTo(lastMessage.id, anchor: .bottom)
                                         }
+                                        proxy.scrollTo("chat_bottom", anchor: .bottom)
                                     }
                                 }
-                                .onChange(of: isLoading) { isLoading, _ in
+//                                .onChange(of: isLoading) { isLoading, _ in  //iOS 17.4
+                                .onChange(of: isLoading) { isLoading in // iOS 16.0
                                     // 当 isLoading 改变时，确保视图滚动到底部
                                     withAnimation {
                                         proxy.scrollTo("chat_loading", anchor: .bottom)
                                     }
                                 }
-                                .onChange(of: isSearchLoading) { isSearchLoading, _ in
+//                                .onChange(of: isSearchLoading) { isSearchLoading, _ in  //iOS 17.4
+                                .onChange(of: isSearchLoading) { isSearchLoading in // iOS 16.0
                                     // 当 isSearchLoading 改变时，确保视图滚动到底部
                                     withAnimation {
                                         proxy.scrollTo("search_loading", anchor: .bottom)
@@ -517,7 +525,7 @@ struct ChatView: View {
     // -----------> [Soctet] <-----------
     // use url: http://54.65.71.9:5000
     // test url: http://localhost:3000
-    private let manager = SocketManager(socketURL: URL(string: "http://54.65.71.9:5000")!, config: [.log(true), .compress])
+    private let manager = SocketManager(socketURL: URL(string: "http://54.65.71.9:5000")!, config: [.log(false), .compress])
     private var socket: SocketIOClient { return manager.defaultSocket }
     private func setupSocket() {
         // 定義一個標誌變數
